@@ -2,12 +2,12 @@
 
 import threading
 import time
-import git
+# import git
 import cv2
 import inspect
 import importlib
 import traceback
-from interception import press
+from src.common.vkeys import press
 from os.path import splitext, basename
 from src.common import config, utils
 from src.routine import components
@@ -28,8 +28,9 @@ class Bot(Configurable):
     """A class that interprets and executes user-defined routines."""
 
     DEFAULT_CONFIG = {
-        'NPC/Gather': 'y',
-        'Feed pet': '9',
+        'NPC/Gather': 'space',
+        'Rune': 'space',
+        'Feed pet': '0',
         'Cash Shop': '`',
         '2x EXP Buff': '7',
         'Mushroom Buff': '8',
@@ -71,7 +72,7 @@ class Bot(Configurable):
         :return:    None
         """
 
-        self.update_submodules()
+        # self.update_submodules()
         print('\n[~] Started main bot loop')
         self.thread.start()
 
@@ -263,42 +264,42 @@ class Bot(Configurable):
         # else:
         #     print(f" !  Command book '{module_name}' was not loaded")
 
-    def update_submodules(self, force=False):
-        """
-        Pulls updates from the submodule repositories. If FORCE is True,
-        rebuilds submodules by overwriting all local changes.
-        """
+    # def update_submodules(self, force=False):
+    #     """
+    #     Pulls updates from the submodule repositories. If FORCE is True,
+    #     rebuilds submodules by overwriting all local changes.
+    #     """
 
-        utils.print_separator()
-        print('[~] Retrieving latest submodules:')
-        self.submodules = []
-        repo = git.Repo.init()
-        with open('.gitmodules', 'r') as file:
-            lines = file.readlines()
-            i = 0
-            while i < len(lines):
-                if lines[i].startswith('[') and i < len(lines) - 2:
-                    path = lines[i + 1].split('=')[1].strip()
-                    url = lines[i + 2].split('=')[1].strip()
-                    self.submodules.append(path)
-                    try:
-                        repo.git.clone(url, path)       # First time loading submodule
-                        print(f" -  Initialized submodule '{path}'")
-                    except git.exc.GitCommandError:
-                        sub_repo = git.Repo(path)
-                        if not force:
-                            sub_repo.git.stash()        # Save modified content
-                        sub_repo.git.fetch('origin', 'main')
-                        sub_repo.git.reset('--hard', 'FETCH_HEAD')
-                        if not force:
-                            try:                # Restore modified content
-                                sub_repo.git.checkout('stash', '--', '.')
-                                print(f" -  Updated submodule '{path}', restored local changes")
-                            except git.exc.GitCommandError:
-                                print(f" -  Updated submodule '{path}'")
-                        else:
-                            print(f" -  Rebuilt submodule '{path}'")
-                        sub_repo.git.stash('clear')
-                    i += 3
-                else:
-                    i += 1
+    #     utils.print_separator()
+    #     print('[~] Retrieving latest submodules:')
+    #     self.submodules = []
+    #     repo = git.Repo.init()
+    #     with open('.gitmodules', 'r') as file:
+    #         lines = file.readlines()
+    #         i = 0
+    #         while i < len(lines):
+    #             if lines[i].startswith('[') and i < len(lines) - 2:
+    #                 path = lines[i + 1].split('=')[1].strip()
+    #                 url = lines[i + 2].split('=')[1].strip()
+    #                 self.submodules.append(path)
+    #                 try:
+    #                     repo.git.clone(url, path)       # First time loading submodule
+    #                     print(f" -  Initialized submodule '{path}'")
+    #                 except git.exc.GitCommandError:
+    #                     sub_repo = git.Repo(path)
+    #                     if not force:
+    #                         sub_repo.git.stash()        # Save modified content
+    #                     sub_repo.git.fetch('origin', 'main')
+    #                     sub_repo.git.reset('--hard', 'FETCH_HEAD')
+    #                     if not force:
+    #                         try:                # Restore modified content
+    #                             sub_repo.git.checkout('stash', '--', '.')
+    #                             print(f" -  Updated submodule '{path}', restored local changes")
+    #                         except git.exc.GitCommandError:
+    #                             print(f" -  Updated submodule '{path}'")
+    #                     else:
+    #                         print(f" -  Rebuilt submodule '{path}'")
+    #                     sub_repo.git.stash('clear')
+    #                 i += 3
+    #             else:
+    #                 i += 1

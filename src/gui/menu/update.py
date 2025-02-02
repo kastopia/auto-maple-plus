@@ -1,4 +1,4 @@
-import git
+# import git
 import tkinter as tk
 from src.common import config
 from src.gui.interfaces import MenuBarItem, LabelFrame, Frame
@@ -54,7 +54,7 @@ class UpdatePrompt(tk.Toplevel):
         # Controls
         controls_frame = Frame(self)
         controls_frame.grid(row=0, column=2, sticky=tk.NSEW, padx=10, pady=10)
-        self.refresh = tk.Button(controls_frame, text='Refresh', command=self._refresh_display)
+        # self.refresh = tk.Button(controls_frame, text='Refresh', command=self._refresh_display)
         self.refresh.pack(side=tk.TOP, pady=(10, 5))
         self.soft_update = tk.Button(
             controls_frame,
@@ -70,7 +70,7 @@ class UpdatePrompt(tk.Toplevel):
         self.force_update.pack(side=tk.BOTTOM, pady=(0, 5))
 
         self.listbox.bindtags((self.listbox, config.gui.root, "all"))       # Unbind all events
-        self.bind('<FocusIn>', lambda *_: self._refresh_display())
+        # self.bind('<FocusIn>', lambda *_: self._refresh_display())
         self.focus()
 
     def _update(self, force=False):
@@ -83,21 +83,21 @@ class UpdatePrompt(tk.Toplevel):
         config.bot.update_submodules(force=force)
         self._close()
 
-    def _refresh_display(self):
-        self.list_var.set(['Searching for local changes...'])
-        self.update()
-        repo = git.Repo(self.path)
-        diffs = []
-        paths = set()
-        for item in repo.index.diff(None) + repo.index.diff('HEAD'):        # Unstaged and staged changes
-            path = item.a_path
-            if path not in paths:       # Only show changes once per file, unstaged has precedence over staged
-                diffs.append(f'{item.change_type} - {path}')
-                paths.add(path)
-        self.dirty = len(diffs) > 0
-        if len(diffs) == 0:
-            diffs.append('No local changes found, safe to update')
-        self.list_var.set(diffs)
+    # def _refresh_display(self):
+    #     self.list_var.set(['Searching for local changes...'])
+    #     self.update()
+    #     repo = git.Repo(self.path)
+    #     diffs = []
+    #     paths = set()
+    #     for item in repo.index.diff(None) + repo.index.diff('HEAD'):        # Unstaged and staged changes
+    #         path = item.a_path
+    #         if path not in paths:       # Only show changes once per file, unstaged has precedence over staged
+    #             diffs.append(f'{item.change_type} - {path}')
+    #             paths.add(path)
+    #     self.dirty = len(diffs) > 0
+    #     if len(diffs) == 0:
+    #         diffs.append('No local changes found, safe to update')
+    #     self.list_var.set(diffs)
 
     def _close(self):
         self.destroy()

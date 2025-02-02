@@ -1,6 +1,6 @@
 import time
 import src.runesolvercore.gdi_capture as gdi_capture
-from interception import press
+from src.common.vkeys import press
 import numpy as np
 import cv2 as cv
 import mss
@@ -190,7 +190,7 @@ def solve_rune_raw(self):
     #assumes user is already at rune
     attempts = 0
     while attempts <= 3 and config.enabled == True:
-        npcChatKey = self.config['NPC/Gather']
+        npcChatKey = self.config['Rune']
         press(npcChatKey, 1)
         time.sleep(0.2)
 

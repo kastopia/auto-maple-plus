@@ -10,7 +10,7 @@ import numpy as np
 import keyboard as kb
 from src.routine.components import Point
 from src.common import config
-from resources import watcher_scan_table
+from src.modules import watcher_scan_table
 import mss
 from src.gui.automation.main import AutomationParams
 import src.modules.automation as automation
